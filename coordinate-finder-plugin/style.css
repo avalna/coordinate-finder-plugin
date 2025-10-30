@@ -1,0 +1,207 @@
+/* plugins/coordinate-finder-plugin/styles.css */
+
+/* Container för infofönstret */
+.coordinate-search-container {
+  position: absolute;
+  z-index: 10000;
+  min-width: 360px;
+  background: #ffffff;
+  border-radius: 15px;
+  border: 1px solid rgba(0,0,0,0.12);
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+/*   gap: 8px;
+  left: 12px;
+  bottom: 12px; */
+ /*  top: auto;
+  right: auto; */
+  top: auto;
+  left: 50px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.coordinate-search-container #coordinate-searchTitle {
+  font-size: large;
+  font-weight: bold;
+  top: 10px;
+  display: block;
+  position: absolute;
+}
+/* Stäng-knapp */
+.coordinate-search-container .o-info-close {
+  align-self: flex-end;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  z-index: 1;
+}
+.coordinate-search-container .o-info-close.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #333;
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 50%;
+}
+
+.coordinate-search-container .o-info-close.icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.coordinate-search-container .o-info-close.icon:hover {
+  color: #333;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 50%;
+}
+
+/* Inre content */
+.coordinate-search-container .o-info-content {
+  display: block;
+  margin-top: 10px;
+}
+
+/* Layout för input-raden */
+.coordinate-search-container .coord-input-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Enskilda inputs */
+.coordinate-search-container input[type="number"],
+.coordinate-search-container input[type="text"],
+.coordinate-search-container select {
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border: 1px solid rgba(0,0,0,0.16);
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+}
+
+/* DMS-behållare */
+.coordinate-search-container .dms-input-container {
+  display: none;
+  margin-top: 8px;
+}
+
+/* DMS inre layout */
+.coordinate-search-container .dms-input-container .dms-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Knappar */
+.coordinate-search-container .o-btn {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+
+/* CRS-select */
+.coordinate-search-container #crsSelect {
+  min-width: 200px;
+  margin-top: 8px;
+}
+
+/* Rad i botten med knappar och select */
+.coordinate-search-container .controls-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  align-items: center;
+}
+
+/* Gör inputfält flexibla */
+.coordinate-search-container input[id="x-coordinate"],
+.coordinate-search-container input[id="y-coordinate"] {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Punktlista och rubrik */
+.coordinate-search-container h3 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+}
+
+/* Mindre rubriker i DMS */
+.coordinate-search-container h4 {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* Små stylingdetaljer */
+.coordinate-search-container p {
+  margin: 0;
+  font-size: 13px;
+}
+
+ /* ===========================
+   MOBILANPASSNING
+   =========================== */
+@media (max-width: 600px) {
+  .coordinate-search-container {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    width: 90vw;
+    min-width: unset;
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  /* Titel centrerad upptill */
+  .coordinate-search-container #coordinate-searchTitle {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%); 
+    font-size: large;
+    font-weight: bold;
+    display: block;
+    text-align: center; 
+    width: 100%;        
+  }
+
+  .coordinate-search-container input,
+  .coordinate-search-container select,
+  .coordinate-search-container .o-btn {
+    font-size: 16px; /* Hindrar zoom */
+    width: 100%;
+  }
+
+  .coordinate-search-container .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coordinate-search-container .coord-input-row {
+    flex-direction: column;
+  }
+
+  .coordinate-search-container #crsSelect {
+    width: 100%;
+  }
+}
