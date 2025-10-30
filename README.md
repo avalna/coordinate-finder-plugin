@@ -23,7 +23,7 @@ Example:
       var origo = Origo('index.json');
       origo.on('load', function(viewer) {
       var coordianteFinder = CoordinateFinder({
-      crs: ['EPSG:3010'], // extra lokala CRS; EPSG:3006, EPSG:4326,  EPSG:3857 adderas alltid
+      crs: ['EPSG:3010'], // extra lokala CRS; EPSG:3006, EPSG:4326 och EPSG:3857 adderas alltid
       defs: {
         'EPSG:3010': '+proj=tmerc +lat_0=0 +lon_0=16.5 +k=1 +x_0=150000 +y_0=0 +ellps=GRS80 +units=m +no_defs'
       },
