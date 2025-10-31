@@ -49,6 +49,7 @@
       let infoEl = null;
       let coordinateCounter = 1;
       let cachedVectorLayer = null;
+      let mapProj = null;
       const listeners = [];
   
       function getMapSafe() {
@@ -183,11 +184,12 @@
         const controlsRow = document.createElement('div'); controlsRow.className = 'controls-row';
         const findBtn = document.createElement('button'); findBtn.id = 'findCoordinateBtn'; findBtn.className = 'o-btn'; findBtn.type = 'button'; findBtn.textContent = 'Hitta plats';
         const removeBtn = document.createElement('button'); removeBtn.id = 'removeCoordinateLayerBtn'; removeBtn.className = 'o-btn'; removeBtn.type = 'button'; removeBtn.textContent = 'Radera punkter';
+        const exportBtn = document.createElement('button'); exportBtn.id = 'exportCoordinateLayerBtn'; exportBtn.className = 'o-btn'; exportBtn.type = 'button'; exportBtn.textContent = 'Spara punkter';
         const crsWrap = document.createElement('div'); crsWrap.className = 'crs-select-wrap';
         const crsSelect = document.createElement('select'); crsSelect.id = 'crsSelect'; crsSelect.className = 'crs-select';
         crsList.forEach(c => { const opt = document.createElement('option'); opt.value = c; opt.textContent = mergedCrsNames[c] || c; crsSelect.appendChild(opt); });
         crsWrap.appendChild(crsSelect);
-        controlsRow.appendChild(findBtn); controlsRow.appendChild(removeBtn); controlsRow.appendChild(crsWrap); content.appendChild(controlsRow);
+        controlsRow.appendChild(findBtn); controlsRow.appendChild(removeBtn); controlsRow.appendChild(exportBtn); controlsRow.appendChild(crsWrap); content.appendChild(controlsRow);
   
         infoEl.appendChild(closeBtn); infoEl.appendChild(content);
   
@@ -328,6 +330,7 @@
             const mapView = map.getView && map.getView();
             if (mapView && typeof mapView.getProjection === 'function') {
               const viewProj = mapView.getProjection().getCode ? mapView.getProjection().getCode() : mapProjectionCode;
+              mapProj = viewProj;
               // Om viewProj matchar projectionCode använd transformedTarget direkt, annars transformera dit
               let centerCoords = transformedTarget;
               if (viewProj !== projectionCode) {
@@ -368,7 +371,31 @@
         };
         removeBtn.addEventListener('click', onRemove);
         listeners.push({ el: removeBtn, ev: 'click', fn: onRemove });
-  
+
+        const onExport = function () {
+          const map = getMapSafe();
+          if (!map) return;
+          try {
+            const layersArray = map.getLayers().getArray();
+            const existing = layersArray.find(layer => layer.get('name') === 'Koordinatlager' || layer === cachedVectorLayer);
+            if (existing) {
+              const geojsonFormat = new Origo.ol.format.GeoJSON();
+              const features = existing.getSource().getFeatures();
+              const geojsonData = geojsonFormat.writeFeatures(features);
+              // Lägg till kartans koordinatsystem till GeoJSON (inte med i GeoJSON standard)
+              const newGeojsonData = geojsonData.replace('"type":"FeatureCollection"', `"type":"FeatureCollection", "crs": {"type" : "name", "properties" : {"name" : "${mapProj}"}}`);
+              const blob = new Blob([newGeojsonData], {type: 'application/json'});
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = 'punkter.geojson';
+              link.click();
+              log('info', 'Koordinatlager sparad');
+            } else { log('info', 'Koordinatlager fanns inte'); }
+          } catch (e) { log('warn', 'Fel vid spara punkter', e); }
+        };
+        exportBtn.addEventListener('click', onExport);
+        listeners.push({ el: exportBtn, ev: 'click', fn: onExport });
+    
         return infoEl;
       }
   
